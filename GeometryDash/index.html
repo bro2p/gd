@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>?</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='78' x='50' text-anchor='middle' font-size='90' font-family='monospace'>?</text></svg>">
+<style>
+body {
+  font-family: monospace;
+  background: #fff;
+  color: #000;
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#lock {
+  text-align: center;
+  display: none;
+}
+input {
+  font-family: monospace;
+  font-size: 14px;
+  padding: 4px;
+  text-align: center;
+}
+button {
+  font-family: monospace;
+  font-size: 14px;
+  padding: 4px 10px;
+  cursor: pointer;
+}
+#msg {
+  font-size: 12px;
+  color: #999;
+  height: 16px;
+  margin-top: 8px;
+}
+#mortis-screen {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  user-select: none;
+  -webkit-user-select: none;
+}
+#mortis-trigger {
+  font-size: 40px;
+  cursor: default;
+}
+</style>
+</head>
+<body>
+
+<div id="lock">
+  <p>enter code</p>
+  <input id="code" type="password" autocomplete="off" spellcheck="false">
+  <button id="go">ok</button>
+  <div id="msg"></div>
+</div>
+
+<div id="mortis-screen">
+  <span id="mortis-trigger">mortis</span>
+</div>
+
+<script>
+// Clear any leftover local storage from older versions
+localStorage.removeItem("done");
+
+function getCookie(name) {
+  var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+  return match ? match[2] : null;
+}
+
+function setCookie(name, val) {
+  document.cookie = name + '=' + val + ';path=/;max-age=31536000';
+}
+
+function updateScreenState() {
+  var marked = getCookie('marked');
+  
+  if (marked === 'true') {
+    document.getElementById('mortis-screen').style.display = 'flex';
+    document.getElementById('lock').style.display = 'none';
+  } else {
+    document.getElementById('mortis-screen').style.display = 'none';
+    document.getElementById('lock').style.display = 'block';
+  }
+}
+
+updateScreenState();
+
+document.getElementById('go').onclick = submit;
+document.getElementById('code').onkeydown = function(e) {
+  if (e.key === 'Enter') submit();
+};
+
+function submit() {
+  var v = document.getElementById('code').value.trim().toUpperCase();
+  if (v === 'APRILFOOLSFOOLS') {
+    setCookie('marked', 'true');
+    updateScreenState();
+  } else {
+    document.getElementById('msg').textContent = 'wrong';
+    document.getElementById('code').value = '';
+  }
+}
+
+// Generate and trigger download of "Geometry Dash.zip" using direct binary bytes
+document.getElementById('mortis-trigger').onclick = function() {
+  var zipBytes = new Uint8Array([
+    80, 75, 3, 4, 10, 0, 0, 0, 0, 0, 163, 117, 106, 88, 14, 186, 219, 137, 13, 0, 0, 0, 13, 0, 0, 0, 10, 0, 28, 0, 97, 115, 115, 101, 116, 115, 46, 116, 120, 116, 85, 84, 9, 0, 3, 203, 149, 102, 102, 203, 149, 102, 102, 117, 120, 11, 0, 1, 4, 244, 1, 0, 0, 4, 244, 1, 0, 0, 71, 101, 111, 109, 101, 116, 114, 121, 32, 68, 97, 115, 104, 80, 75, 1, 2, 30, 3, 10, 0, 0, 0, 0, 0, 163, 117, 106, 88, 14, 186, 219, 137, 13, 0, 0, 0, 13, 0, 0, 0, 10, 0, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0, 164, 129, 0, 0, 0, 0, 97, 115, 115, 101, 116, 115, 46, 116, 120, 116, 85, 84, 5, 0, 3, 203, 149, 102, 102, 117, 120, 11, 0, 1, 4, 244, 1, 0, 0, 4, 244, 1, 0, 0, 80, 75, 5, 6, 0, 0, 0, 0, 1, 0, 1, 0, 62, 0, 0, 0, 121, 0, 0, 0, 0, 0
+  ]);
+  
+  var blob = new Blob([zipBytes], {type: 'application/zip'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'Geometry Dash.zip';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+};
+</script>
+
+</body>
+</html>
